@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Car : MonoBehaviour
 {
-    enum DirectionsEnum
+    public enum DirectionsEnum
     {
         LEFT,
         RIGHT,
         FORWARD
     }
 
-    List<DirectionsEnum> direction = new List<DirectionsEnum>();
+    public List<DirectionsEnum> direction = new List<DirectionsEnum>();
 
 
     public bool crashed;
