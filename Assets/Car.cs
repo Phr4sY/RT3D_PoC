@@ -15,7 +15,7 @@ public class Car : MonoBehaviour
 
 
     public bool crashed;
-    int distance;
+    public int distance;
     bool targetReached;
     
     float speed = 200f;
@@ -23,7 +23,7 @@ public class Car : MonoBehaviour
     float nextTime;
     Vector3 movement = new Vector3(0, 0, 0);
 
-    public GameObject goal;
+    GameObject goal;
 
 
 
@@ -64,7 +64,6 @@ public class Car : MonoBehaviour
     
     void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log("BAMMMMMMMM");
 
         // Remove the car from the canvas if it finishes the course
         if (col.gameObject == goal)
@@ -113,5 +112,9 @@ public class Car : MonoBehaviour
                 break;
         }
         transform.Translate(movement, Space.World);
+    }
+
+    public int getFitnessValue(){
+        return distance;
     }
 }
