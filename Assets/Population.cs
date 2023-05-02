@@ -10,7 +10,7 @@ public class Population : MonoBehaviour
 	public List<GameObject> cars;
 	public List<Car> carControllers;
 
-	int numberCars = 10;
+	int numberCars = 5;
 	int numberOfCarsCrashed = 0;
 	int survivalRate = 2;
 
@@ -28,7 +28,6 @@ public class Population : MonoBehaviour
 
 	void Update(){
 		Debug.Log(carControllers[0].distance);
-
 		
 		for (int i = 0; i < carControllers.Count; i++)
 		{

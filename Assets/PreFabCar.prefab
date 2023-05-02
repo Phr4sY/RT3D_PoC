@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5720556328864585853}
   - component: {fileID: 5720556328864585850}
   - component: {fileID: 5774606048288210358}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PreFabCar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,4 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66453ab01d9a784f8cf89a530e68f1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  direction: 
   crashed: 0
+  distance: 0
