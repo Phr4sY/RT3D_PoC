@@ -8,7 +8,7 @@ public class Population : MonoBehaviour
 	public List<GameObject> cars;
 	public List<Car> carControllers;
 
-	int numberCars = 1;
+	int numberCars = 5;
 	int numberOfCarsCrashed = 0;
 
 	void Start(){
