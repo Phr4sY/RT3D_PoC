@@ -32,6 +32,8 @@ public class Population : MonoBehaviour
     {
         Debug.Log(carControllers[0].distance);
 
+        numberOfCarsCrashed = 0;
+
         for (int i = 0; i < carControllers.Count; i++)
         {
             if (carControllers[i].crashed)
@@ -73,10 +75,19 @@ public class Population : MonoBehaviour
         List<Car.DirectionsEnum> child = new List<Car.DirectionsEnum>();
         Debug.Log("MAKEE SOMETHING!!");
 
+        List<Car.DirectionsEnum> longerParent = new List<Car.DirectionsEnum>();
+        int commonGeneLength = 0;
+
+        if (mom.Count() > dad.Count()) {
+            longerParent = mom;
+            commonGeneLength = dad.Count();
+        } else {
+            longerParent = dad;
+            commonGeneLength = mom.Count();
+        }
 		
 
-        //TODO: step < mom.Count()
-        for (int step = 0; step < 1; step++)
+        for (int step = 0; step < commonGeneLength; step++)
         {
 
             int selectedParent = Random.Range(0, 2);
@@ -85,16 +96,23 @@ public class Population : MonoBehaviour
             {
                 case 0:
                     Debug.Log("Mom!");
-                    //child.Add((Car.DirectionsEnum) mom.direction[step]);
+                    child.Add(mom[step]);
                     break;
                 case 1:
                     Debug.Log("Dad!");
-                    //child.Add((Car.DirectionsEnum) dad.direction[step]);
+                    child.Add(dad[step]);
                     break;
             }
         }
+
+        for (int i = commonGeneLength; i < longerParent.Count(); i++) {
+            child.Add(longerParent[i]);
+        }
+
+        Debug.Log("Child has gene length of " + child.Count() + " and should have length of " + longerParent.Count());
+
         Car childCar = new Car();
-        //childCar.direction = child;
+        childCar.direction = child;
         return childCar;
     }
 }
