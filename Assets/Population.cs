@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.Linq;
 
 public class Population : MonoBehaviour
 {
 
     public GameObject carPrefab;
     public List<GameObject> cars;
+    public List<Car> newCarControllers;
     public List<Car> carControllers;
 
 	int numberCars = 5;
 	int numberOfCarsCrashed = 0;
 	int survivalRate = 2;
+    float mutationRate = 0.93f;
 
     void Start()
     {
@@ -52,7 +53,15 @@ public class Population : MonoBehaviour
             sortAndSelectCarsForFitness(carControllers);
             Debug.Log("Sorted survivers: " + sortAndSelectCarsForFitness(carControllers).Count());
 
-            makeChild(sortAndSelectCarsForFitness(carControllers)[0], sortAndSelectCarsForFitness(carControllers)[1]);
+            for (int i = 0; i < cars.Count(); i++)
+            {
+                Car childCar = makeChild(sortAndSelectCarsForFitness(carControllers)[0], sortAndSelectCarsForFitness(carControllers)[1]);
+                newCarControllers.Add(childCar);
+            }
+
+            carControllers.Clear();
+            carControllers.AddRange(newCarControllers);
+            Debug.Log("Number of cars " + numberCars + " new cars " + carControllers.Count());
 
         }
 
@@ -112,7 +121,29 @@ public class Population : MonoBehaviour
         Debug.Log("Child has gene length of " + child.Count() + " and should have length of " + longerParent.Count());
 
         Car childCar = new Car();
-        childCar.direction = child;
+        
+        childCar.direction = MutateGene(child);
         return childCar;
+    }
+
+
+    List<Car.DirectionsEnum> MutateGene(List<Car.DirectionsEnum> gene)
+    {
+
+        List<Car.DirectionsEnum> mutatedGene = new List<Car.DirectionsEnum>();
+        Debug.Log("Mutation.....................................................................................");
+        for (int i = 0; i < gene.Count(); i++)
+        {
+            System.Random random = new System.Random();
+            if (random.NextDouble() < survivalRate)
+            {
+                Debug.Log("Mutation takes effect at " + i + " in gene.");
+                mutatedGene.Add((Car.DirectionsEnum)Random.Range(0, 3));
+            } else
+            {
+                mutatedGene.Add(gene[i]);
+            }
+        }
+        return mutatedGene;
     }
 }
