@@ -14,9 +14,6 @@ public class Population : MonoBehaviour
 	int numberCars = 5;
 	int numberOfCarsCrashed = 0;
 	int survivalRate = 2;
-    int numberCars = 5;
-    int numberOfCarsCrashed = 0;
-    int survivalRate = 2;
 
     void Start()
     {
