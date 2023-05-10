@@ -9,21 +9,35 @@ public class Population : MonoBehaviour
     public Evolution e = new Evolution();
     public GameObject carPrefab;
     public List<GameObject> cars;
+    public List<GameObject> newCars;
     public List<Car> newCarControllers;
     public List<Car> carControllers;
-
-	private int populationSize = 5;
+    
+    private int generationCycles = 4;
+	private int populationSize = 1;
 	private int numberOfCarsCrashed = 0;
-	private float survivalRate = 0.5f;
-    private float mutationRate = 0.13f;
+	private float survivalRate = 1.0f; //0.5f;
+    private float mutationRate = 0.0f; //0.13f;
+
+    public GameObject successfulIndividium;
 
     void Start()
     {
         for (int i = 0; i < populationSize; i++)
         {
+            
+            // Create the initial geneOfIndividual of the car 
+            List<Car.DirectionsEnum> initialGene = new List<Car.DirectionsEnum>();
+            for (int j = 0; j < 2; j++)
+            {
+                initialGene.Add((Car.DirectionsEnum)Random.Range(0, 3));
+                Debug.Log(initialGene[j]);
+            }
+
             //TODO: Spawn cars on starting point for every population
             GameObject car = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
             Car carController = car.GetComponent<Car>();
+            carController.setInheritedGenes(initialGene);
             cars.Add(car);
             carControllers.Add(carController);
         }
@@ -32,20 +46,22 @@ public class Population : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(carControllers[0].distance);
-
         numberOfCarsCrashed = 0;
 
-        for (int i = 0; i < carControllers.Count; i++)
+        for (int i = 0; i < carControllers.Count(); i++)
         {
             if (carControllers[i].crashed)
             {
                 numberOfCarsCrashed++;
             }
+            if (carControllers[i].targetReached) {
+                Debug.Log("The evolution was successful!!!!! The individual nr. " + i + " has reached the target.");
+                successfulIndividium = cars[i];                
+            }
         }
 
         //check if all cars died
-        if (numberOfCarsCrashed == cars.Count)
+        if ((numberOfCarsCrashed == cars.Count) && (generationCycles > 0)) 
         {
             Debug.Log("All cars crashed. Yay");
             Evolution e = new Evolution();
@@ -59,15 +75,25 @@ public class Population : MonoBehaviour
                 int selectedParent1 = Random.Range(0, individualsToBeParents.Count());
                 int selectedParent2 = Random.Range(0, individualsToBeParents.Count());
                 Debug.Log("Choose parent number " + selectedParent1 + " and " + selectedParent2);
-                Car childCar = e.makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate);
-                newCarControllers.Add(childCar);
+                List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate);
+
+                GameObject childCar = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
+                Car carController = childCar.GetComponent<Car>();   
+                carController.setInheritedGenes(geneOfChildCar);
+                newCars.Add(childCar);
+                newCarControllers.Add(carController);
             }
 
             carControllers.Clear();
             carControllers.AddRange(newCarControllers);
+            newCarControllers.Clear();
+            cars.Clear();
+            cars.AddRange(newCars);
+            newCars.Clear();
             Debug.Log("Size of population " + populationSize + " and number of new cars " + carControllers.Count());
+
+            generationCycles--;
+            Debug.Log(generationCycles + " generations to go.");
         }
-
     }
-
 }

@@ -20,50 +20,48 @@ public class Evolution
     }
 
 
-    public Car makeChild(Car parent1, Car parent2, float mutationRate)
+    public List<Car.DirectionsEnum> makeChild(Car parent1, Car parent2, float mutationRate)
     {
-        List<Car.DirectionsEnum> mom = parent1.direction;
-        List<Car.DirectionsEnum> dad = parent2.direction;
-        List<Car.DirectionsEnum> child = new List<Car.DirectionsEnum>();
-        Debug.Log("MAKEE SOMETHING!!");
+        List<Car.DirectionsEnum> momsGene = parent1.geneOfIndividual;
+        List<Car.DirectionsEnum> dadsGene = parent2.geneOfIndividual;
+        List<Car.DirectionsEnum> childGene = new List<Car.DirectionsEnum>();
+        Debug.Log("MATE SOMETHING!!");
 
         List<Car.DirectionsEnum> longerParent = new List<Car.DirectionsEnum>();
         int commonGeneLength = 0;
 
-        if (mom.Count() > dad.Count()) {
-            longerParent = mom;
-            commonGeneLength = dad.Count();
+        if (momsGene.Count() > dadsGene.Count()) {
+            longerParent = momsGene;
+            commonGeneLength = dadsGene.Count();
         } else {
-            longerParent = dad;
-            commonGeneLength = mom.Count();
+            longerParent = dadsGene;
+            commonGeneLength = momsGene.Count();
         }
 		
-        for (int step = 0; step < commonGeneLength; step++)
+        for (int geneNr = 0; geneNr < commonGeneLength; geneNr++)
         {
             int selectedParent = Random.Range(0, 2);
             switch (selectedParent)
             {
                 case 0:
-                    Debug.Log("My favourite parent is Mom!");
-                    child.Add(mom[step]);
+                    //Debug.Log("My favourite parent is Mom!");
+                    childGene.Add(momsGene[geneNr]);
                     break;
                 case 1:
-                    Debug.Log("My favourite parent is Dad!");
-                    child.Add(dad[step]);
+                    //Debug.Log("My favourite parent is Dad!");
+                    childGene.Add(dadsGene[geneNr]);
                     break;
             }
         }
 
         for (int i = commonGeneLength; i < longerParent.Count(); i++) {
-            child.Add(longerParent[i]);
+            childGene.Add(longerParent[i]);
         }
 
-        Debug.Log("Child has gene length of " + child.Count() + " and should have length of " + longerParent.Count());
+        //Debug.Log("Child has gene length of " + childGene.Count() + " and should have length of " + longerParent.Count());
 
-        Car childCar = new Car();
-        
-        childCar.direction = MutateGene(child, mutationRate);
-        return childCar;
+        childGene = MutateGene(childGene, mutationRate);
+        return childGene;
     }
 
 

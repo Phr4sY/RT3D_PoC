@@ -11,12 +11,12 @@ public class Car : MonoBehaviour
         FORWARD
     }
 
-    public List<DirectionsEnum> direction = new List<DirectionsEnum>();
+    public List<DirectionsEnum> geneOfIndividual = new List<DirectionsEnum>();
 
 
     public bool crashed;
     public int distance;
-    bool targetReached;
+    public bool targetReached;
     
     float speed = 200f;
     int deltaTime = 1;
@@ -30,12 +30,9 @@ public class Car : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Create the initial directions of the car 
-        for (int i = 0; i < 2; i++)
-        {
-            direction.Add( (DirectionsEnum)Random.Range(0, 3));
-            Debug.Log(direction[i]);
-        }
+        
+
+        
 
         // set the starting distance to 0, target reached and crashed to false 
         distance = 0;
@@ -82,16 +79,16 @@ public class Car : MonoBehaviour
 
 
     DirectionsEnum getDirection() {
-        if (direction.Count>= distance) {
-            direction.Add( (DirectionsEnum)Random.Range(0, 3));
-            Debug.Log(direction[distance]);
-            return direction[distance];
+        if (geneOfIndividual.Count>= distance) {
+            geneOfIndividual.Add((DirectionsEnum)Random.Range(0, 3));
+            //Debug.Log(geneOfIndividual[distance]);
+            return geneOfIndividual[distance];
         } 
-        Debug.Log("Old DNA: " + direction[distance] + " at step " + distance);
-        return direction[distance];      
+        Debug.Log("Old DNA: " + geneOfIndividual[distance] + " at step " + distance);
+        return geneOfIndividual[distance];      
     }
 
-    // Read the next direction in the array 
+    // Read the next geneOfIndividual in the array 
     void setDirection(DirectionsEnum currentDirection)
     {
         switch (currentDirection)
@@ -116,5 +113,9 @@ public class Car : MonoBehaviour
 
     public int getFitnessValue(){
         return distance;
+    }
+
+    public void setInheritedGenes(List<DirectionsEnum> givenGenes) {
+        geneOfIndividual.AddRange(givenGenes);
     }
 }
