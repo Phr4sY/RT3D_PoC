@@ -11,16 +11,16 @@ public class Population : MonoBehaviour
     public List<Car> newCarControllers;
     public List<Car> carControllers;
 
-	int numberCars = 5;
-	int numberOfCarsCrashed = 0;
-	int survivalRate = 2;
-    float mutationRate = 0.93f;
+	private int populationSize = 5;
+	private int numberOfCarsCrashed = 0;
+	private float survivalRate = 0.5f;
+    private float mutationRate = 0.13f;
 
     void Start()
     {
-        for (int i = 0; i < numberCars; i++)
+        for (int i = 0; i < populationSize; i++)
         {
-            //TODO: Spawn parallel e.g. Randomize start position 
+            //TODO: Spawn cars on starting point for every population
             GameObject car = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
             Car carController = car.GetComponent<Car>();
             cars.Add(car);
@@ -49,35 +49,39 @@ public class Population : MonoBehaviour
             Debug.Log("All cars crashed. Yay");
 
             //sort/choose cars depending on their fitness value
-            //Debug.Log("Sorted after fitness: " + sortAndSelectCarsForFitness(carControllers)[0].distance);
-            sortAndSelectCarsForFitness(carControllers);
-            Debug.Log("Sorted survivers: " + sortAndSelectCarsForFitness(carControllers).Count());
+            List<Car> individualsToBeParents = sortAndSelectCarsForFitness(carControllers, survivalRate);
+            Debug.Log("Sorted fittest survivers: " + individualsToBeParents.Count());
 
-            for (int i = 0; i < cars.Count(); i++)
+            //create new population
+            for (int i = 0; i < populationSize; i++)
             {
-                Car childCar = makeChild(sortAndSelectCarsForFitness(carControllers)[0], sortAndSelectCarsForFitness(carControllers)[1]);
+                int selectedParent1 = Random.Range(0, individualsToBeParents.Count());
+                int selectedParent2 = Random.Range(0, individualsToBeParents.Count());
+                Debug.Log("Choose parent number " + selectedParent1 + " and " + selectedParent2);
+                Car childCar = makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate);
                 newCarControllers.Add(childCar);
             }
 
             carControllers.Clear();
             carControllers.AddRange(newCarControllers);
-            Debug.Log("Number of cars " + numberCars + " new cars " + carControllers.Count());
-
+            Debug.Log("Size of population " + populationSize + " and number of new cars " + carControllers.Count());
         }
 
     }
 
 
 
-    List<Car> sortAndSelectCarsForFitness(List<Car> cars)
+    List<Car> sortAndSelectCarsForFitness(List<Car> cars, float survivalRate)
     {
+        int numberOfFittestIndividuals = (int) (survivalRate * cars.Count());
+        Debug.Log("Number of fittest individuals is " + numberOfFittestIndividuals);
         List<Car> sortedCarsAfterFitness = cars.OrderBy(car => car.distance).ToList();
-        List<Car> surviverCars = sortedCarsAfterFitness.Take(survivalRate).ToList();
-        return surviverCars;
+        List<Car> fittestSurviverCars = sortedCarsAfterFitness.Take(numberOfFittestIndividuals).ToList();
+        return fittestSurviverCars;
     }
 
 
-    Car makeChild(Car parent1, Car parent2)
+    Car makeChild(Car parent1, Car parent2, float mutationRate)
     {
         List<Car.DirectionsEnum> mom = parent1.direction;
         List<Car.DirectionsEnum> dad = parent2.direction;
@@ -95,20 +99,17 @@ public class Population : MonoBehaviour
             commonGeneLength = mom.Count();
         }
 		
-
         for (int step = 0; step < commonGeneLength; step++)
         {
-
             int selectedParent = Random.Range(0, 2);
-            Debug.Log("My parent is: " + selectedParent);
             switch (selectedParent)
             {
                 case 0:
-                    Debug.Log("Mom!");
+                    Debug.Log("My favourite parent is Mom!");
                     child.Add(mom[step]);
                     break;
                 case 1:
-                    Debug.Log("Dad!");
+                    Debug.Log("My favourite parent is Dad!");
                     child.Add(dad[step]);
                     break;
             }
@@ -122,20 +123,18 @@ public class Population : MonoBehaviour
 
         Car childCar = new Car();
         
-        childCar.direction = MutateGene(child);
+        childCar.direction = MutateGene(child, mutationRate);
         return childCar;
     }
 
 
-    List<Car.DirectionsEnum> MutateGene(List<Car.DirectionsEnum> gene)
+    List<Car.DirectionsEnum> MutateGene(List<Car.DirectionsEnum> gene, float mutationRate)
     {
-
         List<Car.DirectionsEnum> mutatedGene = new List<Car.DirectionsEnum>();
-        Debug.Log("Mutation.....................................................................................");
         for (int i = 0; i < gene.Count(); i++)
         {
             System.Random random = new System.Random();
-            if (random.NextDouble() < survivalRate)
+            if (random.NextDouble() < mutationRate)
             {
                 Debug.Log("Mutation takes effect at " + i + " in gene.");
                 mutatedGene.Add((Car.DirectionsEnum)Random.Range(0, 3));
