@@ -13,13 +13,15 @@ public class Population : MonoBehaviour
     public List<Car> newCarControllers;
     public List<Car> carControllers;
     
-    private int generationCycles = 4;
-	private int populationSize = 1;
+    private int generationCycles = 5;
+	private int populationSize = 4;
 	private int numberOfCarsCrashed = 0;
-	private float survivalRate = 1.0f; //0.5f;
-    private float mutationRate = 0.0f; //0.13f;
+	private float survivalRate = 0.5f; 
+    private float mutationRate = 0.13f;
 
     public GameObject successfulIndividium;
+    private Car successfulCarController;
+    private bool evolutionSuccessful = false;
 
     void Start()
     {
@@ -34,7 +36,7 @@ public class Population : MonoBehaviour
                 Debug.Log(initialGene[j]);
             }
 
-            //TODO: Spawn cars on starting point for every population
+            // Spawn cars on starting point for every population
             GameObject car = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
             Car carController = car.GetComponent<Car>();
             carController.setInheritedGenes(initialGene);
@@ -42,29 +44,40 @@ public class Population : MonoBehaviour
             carControllers.Add(carController);
         }
         Debug.Log(cars[0].GetComponent<Car>().distance);
+        generationCycles--;
     }
 
     void Update()
     {
-        numberOfCarsCrashed = 0;
+        if (!evolutionSuccessful) {
 
-        for (int i = 0; i < carControllers.Count(); i++)
-        {
-            if (carControllers[i].crashed)
+            numberOfCarsCrashed = 0;
+
+            for (int i = 0; i < carControllers.Count(); i++)
             {
-                numberOfCarsCrashed++;
-            }
-            if (carControllers[i].targetReached) {
-                Debug.Log("The evolution was successful!!!!! The individual nr. " + i + " has reached the target.");
-                successfulIndividium = cars[i];                
+                if (carControllers[i].crashed)
+                {
+                    numberOfCarsCrashed++;
+                }
+
+                // check if an individual has successfully reached target
+                if (carControllers[i].targetReached) {
+                    Debug.Log("The evolution was successful!!!!! The individual nr. " + i + " has reached the target.");
+                    successfulIndividium = cars[i];
+                    successfulCarController = carControllers[i]; 
+                    evolutionSuccessful = true;
+                }
             }
         }
 
-        //check if all cars died
+        
+
+        // check if all cars died
         if ((numberOfCarsCrashed == cars.Count) && (generationCycles > 0)) 
         {
             Debug.Log("All cars crashed. Yay");
             Evolution e = new Evolution();
+
             //sort/choose cars depending on their fitness value
             List<Car> individualsToBeParents = e.sortAndSelectCarsForFitness(carControllers, survivalRate);
             Debug.Log("Sorted fittest survivers: " + individualsToBeParents.Count());
@@ -77,6 +90,7 @@ public class Population : MonoBehaviour
                 Debug.Log("Choose parent number " + selectedParent1 + " and " + selectedParent2);
                 List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate);
 
+                // Spawn cars on starting point for every population
                 GameObject childCar = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
                 Car carController = childCar.GetComponent<Car>();   
                 carController.setInheritedGenes(geneOfChildCar);
@@ -84,6 +98,7 @@ public class Population : MonoBehaviour
                 newCarControllers.Add(carController);
             }
 
+            // Clean and setup for next generation
             carControllers.Clear();
             carControllers.AddRange(newCarControllers);
             newCarControllers.Clear();
@@ -94,6 +109,6 @@ public class Population : MonoBehaviour
 
             generationCycles--;
             Debug.Log(generationCycles + " generations to go.");
-        }
+        } 
     }
 }
