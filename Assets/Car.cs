@@ -23,17 +23,13 @@ public class Car : MonoBehaviour
     float nextTime;
     Vector3 movement = new Vector3(0, 0, 0);
 
-    GameObject goal;
-
+    Collision2D col;
+    string goal = "Triangle";
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
-
-        
-
         // set the starting distance to 0, target reached and crashed to false 
         distance = 0;
         targetReached = false;
@@ -63,11 +59,12 @@ public class Car : MonoBehaviour
     {
 
         // Remove the car from the canvas if it finishes the course
-        if (col.gameObject == goal)
+        if (col.transform.gameObject.name == goal)
         {
-            Debug.Log("Reached Goal!");
-            //Destroy(goal);
+            Debug.Log("Reached Goal !!!");
+            Destroy(this);
             targetReached = true;
+            crashed = true;
         } else
         {
             // Remove the car from the canvas if it crashes 
