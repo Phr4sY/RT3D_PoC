@@ -19,7 +19,7 @@ public class Car : MonoBehaviour
     public bool targetReached;
     
     float speed = 200f;
-    int deltaTime = 1;
+    public float deltaTime = 1.0f;
     float nextTime;
     Vector3 movement = new Vector3(0, 0, 0);
 
@@ -92,17 +92,17 @@ public class Car : MonoBehaviour
         {
             case DirectionsEnum.FORWARD:
                 //drive forward
-                movement = Vector3.up * speed * Time.deltaTime;
+                movement = Vector3.up * speed * deltaTime;
                 break;
 
             case DirectionsEnum.LEFT:
                 //drive left
-                movement = Vector3.left * speed * Time.deltaTime;
+                movement = Vector3.left * speed * deltaTime;
                 break;
 
             case DirectionsEnum.RIGHT:
                 //drive right
-                movement = Vector3.right * speed * Time.deltaTime;
+                movement = Vector3.right * speed * deltaTime;
                 break;
         }
         transform.Translate(movement, Space.World);
