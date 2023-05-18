@@ -13,6 +13,10 @@ public class Evolution
     public List<Car> sortAndSelectCarsForFitness(List<Car> cars, float survivalRate)
     {
         int numberOfFittestIndividuals = (int) (survivalRate * cars.Count());
+        if (numberOfFittestIndividuals < 1) {
+            Debug.Log("Survival rate is too small. Survival rate is set to 1.");
+            numberOfFittestIndividuals = 1;
+        }
         Debug.Log("Number of fittest individuals is " + numberOfFittestIndividuals);
         List<Car> sortedCarsAfterFitness = cars.OrderBy(car => car.getFitnessValue()).ToList();
         List<Car> fittestSurviverCars = sortedCarsAfterFitness.Take(numberOfFittestIndividuals).ToList();

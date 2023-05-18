@@ -17,7 +17,7 @@ public class Car : MonoBehaviour
     private int distance;
     public bool targetReached;
     
-    float speed = 0.9f;
+    public float stepSize = 0.9f;
     public float deltaTime = 1.0f;
     float nextTime;
     Vector3 movement = new Vector3(0, 0, 0);
@@ -38,7 +38,11 @@ public class Car : MonoBehaviour
         movement = new Vector3(0, 0, 0);
         transform.Translate(movement, Space.World);
         nextTime = Time.time + deltaTime;
-        Debug.Log("GEENEE" + geneOfIndividual.Count);
+
+        if (stepSize > 1 || stepSize <= 0) {
+            Debug.Log("Step size either too large or too small. Choose a value between 0 and 1. Set back to 1 on default.");
+            stepSize = 1;
+        }
     }
 
     // Update is called once per frame
@@ -50,7 +54,6 @@ public class Car : MonoBehaviour
             distance++;
             nextTime = Time.time + deltaTime;
         }
-        
     }
 
     
@@ -75,7 +78,7 @@ public class Car : MonoBehaviour
 
 
     DirectionsEnum getDirection(int distance) {
-        Debug.Log("Old DNA has " + geneOfIndividual.Count + " genes at step " + distance);
+        //Debug.Log("Old DNA has " + geneOfIndividual.Count + " genes at step " + distance);
        
         if (distance >= geneOfIndividual.Count) {
             //Debug.Log("Nr of original gene " + geneOfIndividual.Count + " is hopefully smaller than distance travelled " + distance);
@@ -94,17 +97,17 @@ public class Car : MonoBehaviour
         {
             case DirectionsEnum.FORWARD:
                 //drive forward
-                movement = Vector3.up * speed * deltaTime;
+                movement = Vector3.up * stepSize;
                 break;
 
             case DirectionsEnum.LEFT:
                 //drive left
-                movement = Vector3.left * speed * deltaTime;
+                movement = Vector3.left * stepSize;
                 break;
 
             case DirectionsEnum.RIGHT:
                 //drive right
-                movement = Vector3.right * speed * deltaTime;
+                movement = Vector3.right * stepSize;
                 break;
         }
         transform.Translate(movement, Space.World);

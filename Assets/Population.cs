@@ -13,12 +13,12 @@ public class Population : MonoBehaviour
     public List<Car> newCarControllers;
     public List<Car> carControllers;
     
-    private int generationCycles = 5;
-	private int populationSize = 4;
+    private int generationCycles = 50;
+	private int populationSize = 20;
 	private int numberOfCarsCrashed = 0;
-	private float survivalRate = 0.5f; 
+	private float survivalRate = 0.1f; 
     private float mutationRate = 0.03f;
-    private bool crossOver = false;
+    private bool crossOver = true;
     public int lengthOfInitialGene = 6;
 
     public GameObject successfulIndividium;
@@ -40,9 +40,9 @@ public class Population : MonoBehaviour
             // Spawn cars on starting point for every population
             GameObject car = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
             Car carController = car.GetComponent<Car>();
-            Debug.Log("INITAL GENE should be 0 and is ... " + carController.getGeneString().Count());
+            //Debug.Log("INITAL GENE should be 0 and is ... " + carController.getGeneString().Count());
             carController.setInheritedGenes(initialGene);
-            Debug.Log("INITAL GENE should be " + lengthOfInitialGene + " and is ... " + carController.getGeneString().Count());
+            //Debug.Log("INITAL GENE should be " + lengthOfInitialGene + " and is ... " + carController.getGeneString().Count());
             cars.Add(car);
             carControllers.Add(carController);
         }
