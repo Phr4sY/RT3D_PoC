@@ -13,11 +13,11 @@ public class Population : MonoBehaviour
     public List<Car> newCarControllers;
     public List<Car> carControllers;
     
-    private int generationCycles = 5;
-	private int populationSize = 4;
+    private int generationCycles = 50;
+	private int populationSize = 8;
 	private int numberOfCarsCrashed = 0;
-	private float survivalRate = 0.5f; 
-    private float mutationRate = 0.13f;
+	private float survivalRate = 0.25f; 
+    private float mutationRate = 0.03f;
 
     public GameObject successfulIndividium;
     private Car successfulCarController;
@@ -99,6 +99,10 @@ public class Population : MonoBehaviour
             }
 
             // Clean and setup for next generation
+            foreach (var item in cars)
+            {
+                Destroy(item);
+            }
             carControllers.Clear();
             carControllers.AddRange(newCarControllers);
             newCarControllers.Clear();
