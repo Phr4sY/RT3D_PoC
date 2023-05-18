@@ -13,12 +13,11 @@ public class Car : MonoBehaviour
 
     public List<DirectionsEnum> geneOfIndividual = new List<DirectionsEnum>();
 
-
     public bool crashed;
-    public int distance;
+    private int distance;
     public bool targetReached;
     
-    float speed = 200f;
+    float speed = 0.9f;
     public float deltaTime = 1.0f;
     float nextTime;
     Vector3 movement = new Vector3(0, 0, 0);
@@ -39,15 +38,15 @@ public class Car : MonoBehaviour
         movement = new Vector3(0, 0, 0);
         transform.Translate(movement, Space.World);
         nextTime = Time.time + deltaTime;
-
+        Debug.Log("GEENEE" + geneOfIndividual.Count);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((Time.time >= nextTime) && (distance < 100))
+        if (Time.time >= nextTime)
         {
-            setDirection(getDirection());
+            setDirection(getDirection(distance));
             distance++;
             nextTime = Time.time + deltaTime;
         }
@@ -75,15 +74,18 @@ public class Car : MonoBehaviour
     }
 
 
-    DirectionsEnum getDirection() {
-        if (geneOfIndividual.Count>= distance) {
+    DirectionsEnum getDirection(int distance) {
+        Debug.Log("Old DNA has " + geneOfIndividual.Count + " genes at step " + distance);
+       
+        if (distance >= geneOfIndividual.Count) {
+            //Debug.Log("Nr of original gene " + geneOfIndividual.Count + " is hopefully smaller than distance travelled " + distance);
             geneOfIndividual.Add((DirectionsEnum)Random.Range(0, 3));
-            //Debug.Log(geneOfIndividual[distance]);
             return geneOfIndividual[distance];
         } 
-        Debug.Log("Old DNA: " + geneOfIndividual[distance] + " at step " + distance);
+        //Debug.Log("Old DNA: " + geneOfIndividual[distance] + " at step " + distance);
         return geneOfIndividual[distance];      
     }
+
 
     // Read the next geneOfIndividual in the array 
     void setDirection(DirectionsEnum currentDirection)
@@ -114,5 +116,9 @@ public class Car : MonoBehaviour
 
     public void setInheritedGenes(List<DirectionsEnum> givenGenes) {
         geneOfIndividual.AddRange(givenGenes);
+    }
+
+    public List<DirectionsEnum> getGeneString() {
+        return geneOfIndividual;
     }
 }
