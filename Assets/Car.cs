@@ -49,7 +49,7 @@ public class Car : MonoBehaviour
         {
             setDirection(getDirection());
             distance++;
-            nextTime += deltaTime;
+            nextTime = Time.time + deltaTime;
         }
         
     }
