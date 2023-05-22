@@ -6,10 +6,6 @@ using System.Linq;
 public class Evolution 
 {
 
-    public Evolution() {
-
-    }
-
     public List<Car> sortAndSelectCarsForFitness(List<Car> cars, float survivalRate, float penaltyForDirectionChange, float penaltyForDrivingSideways)
     {
         int numberOfFittestIndividuals = (int) (survivalRate * cars.Count());
@@ -19,45 +15,12 @@ public class Evolution
         }
         Debug.Log("Number of fittest individuals is " + numberOfFittestIndividuals);
 
-        List<Car> sortedCarsAfterFitness = new List<Car>();
-      /*  if (punishSidewaysChoice) {
-            float penalty = 0.5f;
-            sortedCarsAfterFitness = sortingCarsByPunishingSidewayChoices(cars, penalty);
-        } 
-        if (punishDirectionChange) {
-            float penaltyScalerDirectionChange = 0.7f;
-            sortedCarsAfterFitness = sortingCarsByPunishingDirectionChange(cars, penaltyScalerDirectionChange);
-        } else {
-            sortedCarsAfterFitness = cars.OrderByDescending(car => car.getFitnessValue()).ToList();
-        }*/
-
-        sortedCarsAfterFitness = sortingCarsByPunishingFeatures(cars, penaltyForDirectionChange, penaltyForDrivingSideways);
-
+        List<Car> sortedCarsAfterFitness = sortingCarsByPunishingFeatures(cars, penaltyForDirectionChange, penaltyForDrivingSideways);
         //Debug.Log("Fitness of cars on first places:" + sortedCarsAfterFitness[0].getFitnessValue() + " & " + sortedCarsAfterFitness[1].getFitnessValue());
         List<Car> fittestSurviverCars = sortedCarsAfterFitness.Take(numberOfFittestIndividuals).ToList();
         return fittestSurviverCars;
     }
 
-    private List<Car> sortingCarsByPunishingDirectionChange(List<Car> cars, float penalty) {
-        List<Car> carsWithWeightedFitness = new List<Car>();
-        foreach (var car in cars)
-        {
-            float newFitnessValue = 0;
-            for (int genePart = 0; genePart < car.getFitnessValue() - 1; genePart++) {
-                if (car.getGeneString()[genePart] == car.getGeneString()[genePart+1]) {
-                    //Debug.Log("Those two directions should be the same: " + car.getGeneString()[genePart] + " & " + car.getGeneString()[genePart+1]);
-                    newFitnessValue++;
-                } else {
-                    newFitnessValue = newFitnessValue + 1 * penalty;
-                }
-            }
-            Debug.Log("Instead of getting " + car.getFitnessValue() + " its new value is " + newFitnessValue);
-            car.setFitnessValue(newFitnessValue);
-            Debug.Log("New value is " + car.getFitnessValue());
-            carsWithWeightedFitness.Add(car);
-        }   
-        return carsWithWeightedFitness.OrderByDescending(car => car.getFitnessValue()).ToList();
-    }
 
     private List<Car> sortingCarsByPunishingFeatures(List<Car> cars, float penaltyForDirectionChange, float penaltyForDrivingSideways) {
         List<Car> carsWithWeightedFitness = new List<Car>();
@@ -85,38 +48,7 @@ public class Evolution
         return carsWithWeightedFitness.OrderByDescending(car => car.getFitnessValue()).ToList();
     }
 
-    private List<Car> sortingCarsByPunishingSidewayChoices(List<Car> cars, float penalty) {
-        List<Car> carsWithWeightedFitness = new List<Car>();
-        foreach (var car in cars)
-        {
-            float newFitnessValue = 0;
-            for (int genePart = 0; genePart < car.getFitnessValue(); genePart++) {
-                Debug.Log("I DO NOT nOW SHIIT." + car.getGeneString()[genePart]);
-
-                switch (car.getGeneString()[genePart])
-                {
-                    case Car.DirectionsEnum.FORWARD:
-                        newFitnessValue++;
-                        break;
-
-                    case Car.DirectionsEnum.LEFT:
-                        newFitnessValue = newFitnessValue + 1 * penalty;
-                        break;
-
-                    case Car.DirectionsEnum.RIGHT:
-                        newFitnessValue = newFitnessValue + 1 * penalty;
-                        break;
-                }
-            }
-            Debug.Log("Instead of getting " + car.getFitnessValue() + " its new value is " + newFitnessValue);
-            car.setFitnessValue(newFitnessValue);
-            Debug.Log("New value is " + car.getFitnessValue());
-            carsWithWeightedFitness.Add(car);
-        }   
-        return carsWithWeightedFitness.OrderByDescending(car => car.getFitnessValue()).ToList();
-    }
-
-
+   
     public Car selectParent(List<Car> potentialParents, bool weightedChoice) {
         if (weightedChoice) {
             Debug.Log("Performance oriented world coming up soon ...");

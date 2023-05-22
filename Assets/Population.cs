@@ -22,8 +22,6 @@ public class Population : MonoBehaviour
     private float crossOverPercentageAt = 0.3f;
     public int lengthOfInitialGene = 6;
     private bool weightedParentChoice = true;
-   // bool penalizeSidewaysChoice = false;
-   // bool penalizeDirectionChange = true;
     public float penalizeDirectionChange = 0.5f;
     public float penalizeSidewaysChoice = 0f;
 
@@ -97,11 +95,7 @@ public class Population : MonoBehaviour
                 Car parent1 = e.selectParent(individualsToBeParents, weightedParentChoice);
                 Car parent2 = e.selectParent(individualsToBeParents, weightedParentChoice);
                 List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(parent1, parent2, mutationRate, crossOver, crossOverPercentageAt);
-                //int selectedParent1 = Random.Range(0, individualsToBeParents.Count());
-                //int selectedParent2 = Random.Range(0, individualsToBeParents.Count());
-                //Debug.Log("Choose parent number " + selectedParent1 + " and " + selectedParent2);
-                //List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate, crossOver);
-
+                
                 // Spawn cars on starting point for every population
                 GameObject childCar = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
                 Car carController = childCar.GetComponent<Car>();   
