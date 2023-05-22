@@ -18,21 +18,49 @@ public class Evolution
             numberOfFittestIndividuals = 1;
         }
         Debug.Log("Number of fittest individuals is " + numberOfFittestIndividuals);
-        List<Car> sortedCarsAfterFitness = cars.OrderBy(car => car.getFitnessValue()).ToList();
+        List<Car> sortedCarsAfterFitness = cars.OrderByDescending(car => car.getFitnessValue()).ToList();
+        Debug.Log("Fitness of cars on first three places:" + sortedCarsAfterFitness[0].getFitnessValue() + ", "
+                    + sortedCarsAfterFitness[1].getFitnessValue() + ", " + sortedCarsAfterFitness[2].getFitnessValue());
+        Debug.Log("Fitness of car on the last place:" + sortedCarsAfterFitness[sortedCarsAfterFitness.Count()-1].getFitnessValue());
         List<Car> fittestSurviverCars = sortedCarsAfterFitness.Take(numberOfFittestIndividuals).ToList();
         return fittestSurviverCars;
     }
 
 
-    public List<Car.DirectionsEnum> makeChild(Car parent1, Car parent2, float mutationRate, bool crossOver)
+    public Car selectParent(List<Car> potentialParents, bool weightedChoice) {
+        if (weightedChoice) {
+            Debug.Log("Performance oriented world coming up soon ...");
+            List<Car> sortedCarsAfterFitnessAscending = potentialParents.OrderBy(car => car.getFitnessValue()).ToList();
+
+            int numberOfIndiviuals = potentialParents.Count();
+            List<Car> weightedListOfPotentialParents = new List<Car>();
+            for (int i = 0; i < numberOfIndiviuals; i++) {
+                int listPosition = i;
+                for (int j = 0; j <= listPosition; j++) {
+                    weightedListOfPotentialParents.Add(sortedCarsAfterFitnessAscending[i]);
+                }
+            }
+
+            Debug.Log("There is now the chance " + numberOfIndiviuals + " times higher to choose fittest car.");
+            int selectedParentPerformanceBased = Random.Range(0, weightedListOfPotentialParents.Count());
+            return weightedListOfPotentialParents[selectedParentPerformanceBased];
+        } 
+        
+        Debug.Log("Same chances for everyone - well the chosen percentage anyways.");
+        int selectedParent = Random.Range(0, potentialParents.Count());
+        return potentialParents[selectedParent];
+    }
+
+
+    public List<Car.DirectionsEnum> makeChild(Car parent1, Car parent2, float mutationRate, bool crossOver, float crossOverAt)
     {
         List<Car.DirectionsEnum> momsGene = parent1.geneOfIndividual;
         List<Car.DirectionsEnum> dadsGene = parent2.geneOfIndividual;
         List<Car.DirectionsEnum> childGene = new List<Car.DirectionsEnum>();
         Debug.Log("MATE SOMETHING!!");
 
-         if (crossOver) {
-            for (int i = 0; i < momsGene.Count() / 2; i++) {
+        if (crossOver) {
+            for (int i = 0; i < momsGene.Count() * crossOverAt; i++) {
                 childGene.Add(momsGene[i]);
             }
             for (int j = childGene.Count(); j < dadsGene.Count(); j++) {

@@ -13,13 +13,15 @@ public class Population : MonoBehaviour
     public List<Car> newCarControllers;
     public List<Car> carControllers;
     
-    private int generationCycles = 50;
+    private int generationCycles = 500;
 	private int populationSize = 20;
 	private int numberOfCarsCrashed = 0;
-	private float survivalRate = 0.1f; 
+	private float survivalRate = 0.8f; 
     private float mutationRate = 0.03f;
     private bool crossOver = true;
+    private float crossOverPercentageAt = 0.3f;
     public int lengthOfInitialGene = 6;
+    private bool weightedParentChoice = true;
 
     public GameObject successfulIndividium;
     private Car successfulCarController;
@@ -84,14 +86,17 @@ public class Population : MonoBehaviour
             //sort/choose cars depending on their fitness value
             List<Car> individualsToBeParents = e.sortAndSelectCarsForFitness(carControllers, survivalRate);
             Debug.Log("Sorted fittest survivers: " + individualsToBeParents.Count());
-
+            
             //create new population
             for (int i = 0; i < populationSize; i++)
             {
-                int selectedParent1 = Random.Range(0, individualsToBeParents.Count());
-                int selectedParent2 = Random.Range(0, individualsToBeParents.Count());
-                Debug.Log("Choose parent number " + selectedParent1 + " and " + selectedParent2);
-                List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate, crossOver);
+                Car parent1 = e.selectParent(individualsToBeParents, weightedParentChoice);
+                Car parent2 = e.selectParent(individualsToBeParents, weightedParentChoice);
+                List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(parent1, parent2, mutationRate, crossOver, crossOverPercentageAt);
+                //int selectedParent1 = Random.Range(0, individualsToBeParents.Count());
+                //int selectedParent2 = Random.Range(0, individualsToBeParents.Count());
+                //Debug.Log("Choose parent number " + selectedParent1 + " and " + selectedParent2);
+                //List<Car.DirectionsEnum> geneOfChildCar = e.makeChild(individualsToBeParents[selectedParent1], individualsToBeParents[selectedParent2], mutationRate, crossOver);
 
                 // Spawn cars on starting point for every population
                 GameObject childCar = Instantiate(carPrefab, this.transform.position, this.transform.rotation);
