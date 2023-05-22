@@ -15,6 +15,7 @@ public class Car : MonoBehaviour
 
     public bool crashed;
     private int distance;
+    private float fitnessValue;
     public bool targetReached;
     
     public float stepSize = 0.9f;
@@ -31,6 +32,7 @@ public class Car : MonoBehaviour
     {
         // set the starting distance to 0, target reached and crashed to false 
         distance = 0;
+        fitnessValue = 0;
         targetReached = false;
         crashed = false;
 
@@ -52,6 +54,7 @@ public class Car : MonoBehaviour
         {
             setDirection(getDirection(distance));
             distance++;
+            fitnessValue = distance;
             nextTime = Time.time + deltaTime;
         }
     }
@@ -113,8 +116,12 @@ public class Car : MonoBehaviour
         transform.Translate(movement, Space.World);
     }
 
-    public int getFitnessValue(){
-        return distance;
+    public float getFitnessValue(){
+        return fitnessValue;
+    }
+
+    public void setFitnessValue(float newFitnessValue) {
+        fitnessValue = newFitnessValue;
     }
 
     public void setInheritedGenes(List<DirectionsEnum> givenGenes) {

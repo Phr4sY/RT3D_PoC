@@ -22,6 +22,10 @@ public class Population : MonoBehaviour
     private float crossOverPercentageAt = 0.3f;
     public int lengthOfInitialGene = 6;
     private bool weightedParentChoice = true;
+   // bool penalizeSidewaysChoice = false;
+   // bool penalizeDirectionChange = true;
+    public float penalizeDirectionChange = 0.5f;
+    public float penalizeSidewaysChoice = 0f;
 
     public GameObject successfulIndividium;
     private Car successfulCarController;
@@ -84,7 +88,7 @@ public class Population : MonoBehaviour
             Evolution e = new Evolution();
 
             //sort/choose cars depending on their fitness value
-            List<Car> individualsToBeParents = e.sortAndSelectCarsForFitness(carControllers, survivalRate);
+            List<Car> individualsToBeParents = e.sortAndSelectCarsForFitness(carControllers, survivalRate, penalizeSidewaysChoice, penalizeDirectionChange);
             Debug.Log("Sorted fittest survivers: " + individualsToBeParents.Count());
             
             //create new population
