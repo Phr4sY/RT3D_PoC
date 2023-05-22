@@ -148,6 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   geneOfIndividual: 
   crashed: 0
-  distance: 0
   targetReached: 0
-  deltaTime: 0.005
+  stepSize: 12
+  deltaTime: 0.05
