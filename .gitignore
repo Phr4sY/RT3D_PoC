@@ -70,3 +70,8 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Logs/AssetImportWorker0-prev.log
+Logs/AssetImportWorker0.log
+Logs/AssetImportWorker1-prev.log
+Logs/AssetImportWorker1.log
+Logs/shadercompiler-AssetImportWorker0.log

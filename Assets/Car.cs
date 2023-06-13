@@ -11,34 +11,28 @@ public class Car : MonoBehaviour
         FORWARD
     }
 
-    public List<DirectionsEnum> direction = new List<DirectionsEnum>();
-
+    public List<DirectionsEnum> geneOfIndividual = new List<DirectionsEnum>();
 
     public bool crashed;
-    public int distance;
-    bool targetReached;
+    private int distance;
+    private float fitnessValue;
+    public bool targetReached;
     
-    float speed = 200f;
-    int deltaTime = 1;
+    public float stepSize = 0.9f;
+    public float deltaTime = 1.0f;
     float nextTime;
     Vector3 movement = new Vector3(0, 0, 0);
 
-    GameObject goal;
-
+    Collision2D col;
+    string goal = "Triangle";
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // Create the initial directions of the car 
-        for (int i = 0; i < 2; i++)
-        {
-            direction.Add( (DirectionsEnum)Random.Range(0, 3));
-            Debug.Log(direction[i]);
-        }
-
         // set the starting distance to 0, target reached and crashed to false 
         distance = 0;
+        fitnessValue = 0;
         targetReached = false;
         crashed = false;
 
@@ -47,18 +41,22 @@ public class Car : MonoBehaviour
         transform.Translate(movement, Space.World);
         nextTime = Time.time + deltaTime;
 
+        if (stepSize > 1 || stepSize <= 0) {
+            Debug.Log("Step size either too large or too small. Choose a value between 0 and 1. Set back to 1 on default.");
+            stepSize = 1;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((Time.time >= nextTime) && (distance < 100))
+        if (Time.time >= nextTime)
         {
-            setDirection(getDirection());
+            setDirection(getDirection(distance));
             distance++;
-            nextTime += deltaTime;
+            fitnessValue = distance;
+            nextTime = Time.time + deltaTime;
         }
-        
     }
 
     
@@ -66,11 +64,12 @@ public class Car : MonoBehaviour
     {
 
         // Remove the car from the canvas if it finishes the course
-        if (col.gameObject == goal)
+        if (col.transform.gameObject.name == goal)
         {
-            Debug.Log("Reached Goal!");
-            //Destroy(goal);
+            Debug.Log("Reached Goal !!!");
+            Destroy(this);
             targetReached = true;
+            crashed = true;
         } else
         {
             // Remove the car from the canvas if it crashes 
@@ -81,40 +80,55 @@ public class Car : MonoBehaviour
     }
 
 
-    DirectionsEnum getDirection() {
-        if (direction.Count>= distance) {
-            direction.Add( (DirectionsEnum)Random.Range(0, 3));
-            Debug.Log(direction[distance]);
-            return direction[distance];
+    DirectionsEnum getDirection(int distance) {
+        //Debug.Log("Old DNA has " + geneOfIndividual.Count + " genes at step " + distance);
+       
+        if (distance >= geneOfIndividual.Count) {
+            //Debug.Log("Nr of original gene " + geneOfIndividual.Count + " is hopefully smaller than distance travelled " + distance);
+            geneOfIndividual.Add((DirectionsEnum)Random.Range(0, 3));
+            return geneOfIndividual[distance];
         } 
-        Debug.Log("Old DNA: " + direction[distance] + " at step " + distance);
-        return direction[distance];      
+        //Debug.Log("Old DNA: " + geneOfIndividual[distance] + " at step " + distance);
+        return geneOfIndividual[distance];      
     }
 
-    // Read the next direction in the array 
+
+    // Read the next geneOfIndividual in the array 
     void setDirection(DirectionsEnum currentDirection)
     {
         switch (currentDirection)
         {
             case DirectionsEnum.FORWARD:
                 //drive forward
-                movement = Vector3.up * speed * Time.deltaTime;
+                movement = Vector3.up * stepSize;
                 break;
 
             case DirectionsEnum.LEFT:
                 //drive left
-                movement = Vector3.left * speed * Time.deltaTime;
+                movement = Vector3.left * stepSize;
                 break;
 
             case DirectionsEnum.RIGHT:
                 //drive right
-                movement = Vector3.right * speed * Time.deltaTime;
+                movement = Vector3.right * stepSize;
                 break;
         }
         transform.Translate(movement, Space.World);
     }
 
-    public int getFitnessValue(){
-        return distance;
+    public float getFitnessValue(){
+        return fitnessValue;
+    }
+
+    public void setFitnessValue(float newFitnessValue) {
+        fitnessValue = newFitnessValue;
+    }
+
+    public void setInheritedGenes(List<DirectionsEnum> givenGenes) {
+        geneOfIndividual.AddRange(givenGenes);
+    }
+
+    public List<DirectionsEnum> getGeneString() {
+        return geneOfIndividual;
     }
 }

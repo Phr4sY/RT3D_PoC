@@ -146,6 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66453ab01d9a784f8cf89a530e68f1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: 
+  geneOfIndividual: 
   crashed: 0
-  distance: 0
+  targetReached: 0
+  stepSize: 12
+  deltaTime: 0.05
