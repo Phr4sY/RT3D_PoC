@@ -14,7 +14,7 @@ public class Population : MonoBehaviour
     public List<Car> carControllers;
     
     private int generationCycles = 500;
-	private int populationSize = 20;
+	private int populationSize = 500;
 	private int numberOfCarsCrashed = 0;
 	private float survivalRate = 0.8f; 
     private float mutationRate = 0.03f;
