@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using TMPro;
 
 
 public class Population : MonoBehaviour
@@ -14,6 +15,7 @@ public class Population : MonoBehaviour
     public List<Car> carControllers;
     
     private int generationCycles = 500;
+    private int generationCyclesCount = 0;
 	private int populationSize = 500;
 	private int numberOfCarsCrashed = 0;
 	private float survivalRate = 0.8f; 
@@ -29,8 +31,30 @@ public class Population : MonoBehaviour
     private Car successfulCarController;
     private bool evolutionSuccessful = false;
 
+
+    public TMP_Text generationsText;
+    public TMP_Text populationSizeText;
+
+    public TMP_Text survivalRateText;
+    public TMP_Text penaltyDirectionText;
+    public TMP_Text mutationRateText;
+    public TMP_Text crossOverText;
+    public TMP_Text weightedParentChoiceText;
+
+
     void Start()
     {
+        generationsText.text = "Generation: " + generationCyclesCount + "/" + generationCycles;
+        populationSizeText.text = "Population: " + populationSize; 
+
+        survivalRateText.text = "Survival rate: " + survivalRate;
+        penaltyDirectionText.text = "Penalty for direction change: " + penalizeDirectionChange;
+        mutationRateText.text = "Mutation rate: " + mutationRate;
+
+        crossOverText.text = "Gene cross-over: " + crossOver;
+        weightedParentChoiceText.text = "Fitter indiviuals get more offspring: " + weightedParentChoice;
+
+
         for (int i = 0; i < populationSize; i++)
         {
             
@@ -50,7 +74,8 @@ public class Population : MonoBehaviour
             cars.Add(car);
             carControllers.Add(carController);
         }
-        generationCycles--;
+        generationCyclesCount++;
+        generationsText.text = "Generation: " + generationCyclesCount + "/" + generationCycles;
     }
 
     void Update()
@@ -80,7 +105,7 @@ public class Population : MonoBehaviour
         
 
         // check if all cars died
-        if ((numberOfCarsCrashed == cars.Count) && (generationCycles > 0)) 
+        if ((numberOfCarsCrashed == cars.Count) && ((generationCycles-generationCyclesCount) > 0)) 
         {
             Debug.Log("All cars crashed. Yay");
             Evolution e = new Evolution();
@@ -117,8 +142,8 @@ public class Population : MonoBehaviour
             newCars.Clear();
             Debug.Log("Size of population " + populationSize + " and number of new cars " + carControllers.Count());
 
-            generationCycles--;
-            Debug.Log(generationCycles + " generations to go.");
+            generationCyclesCount++;
+            generationsText.text = "Generation: " + generationCyclesCount + "/" + generationCycles;
         } 
     }
 }
