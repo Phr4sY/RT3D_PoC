@@ -24,7 +24,6 @@ public class Car : MonoBehaviour
     Vector3 movement = new Vector3(0, 0, 0);
 
     Collision2D col;
-    string goal = "Triangle";
 
 
     // Start is called before the first frame update
@@ -64,7 +63,7 @@ public class Car : MonoBehaviour
     {
 
         // Remove the car from the canvas if it finishes the course
-        if (col.transform.gameObject.name == goal)
+        if (col.gameObject.CompareTag("Target"))
         {
             Debug.Log("Reached Goal !!!");
             Destroy(this);

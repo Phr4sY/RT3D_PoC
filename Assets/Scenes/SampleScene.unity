@@ -438,8 +438,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 40670798525112150, guid: 1f3ae59000dd31440a4cff004fe6f489, type: 3}
+  target: {fileID: 8893663381135007856, guid: dad04c04b14044e398974b241ddb5ca0, type: 3}
   laneWidth: 6
-  mapLength: 30
+  mapLength: 150
+  wallWidth: 2
   curveFrequency: 1
 --- !u!1 &519420028
 GameObject:
@@ -488,13 +490,13 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 0.4
-    height: 0.5
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 50
+  orthographic size: 100
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -518,7 +520,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13, y: 45, z: -10}
+  m_LocalPosition: {x: 0, y: 100, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -890,7 +892,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 126.4, y: -333.7}
+  m_AnchoredPosition: {x: 126.399994, y: -333.7}
   m_SizeDelta: {x: 230, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1006806907
